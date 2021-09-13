@@ -1,19 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ContactListItem from "../ContactListItem";
 import "./ContactList.scss";
 
-const ContactList = ({ contacts, deleteContact }) => {
+const ContactList = ({ contacts }) => {
   return (
     <ul className="ContactList">
-      {contacts.map(({ id, name, number }) => (
-        <ContactListItem
-          key={id}
-          contactId={id}
-          name={name}
-          number={number}
-          deleteContact={deleteContact}
-        />
+      {contacts.map((contact) => (
+        <ContactListItem key={contact.id} contact={contact} />
       ))}
     </ul>
   );
@@ -21,7 +16,20 @@ const ContactList = ({ contacts, deleteContact }) => {
 
 ContactList.propTypes = {
   contacts: PropTypes.array.isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
 
-export default ContactList;
+const filteredItems = (items, filter) => {
+  const normalizedFilter = filter.toLowerCase();
+  return items.filter(({ name }) =>
+    name.toLowerCase().includes(normalizedFilter)
+  );
+};
+
+const mapStateToProps = ({ contacts: { items, filter } }) => {
+  console.log(filter);
+  return {
+    contacts: filteredItems(items, filter),
+  };
+};
+
+export default connect(mapStateToProps)(ContactList);

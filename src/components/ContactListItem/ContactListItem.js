@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import contactActions from "../../redux/contacts/contacts-actions";
 import "./ContactListItem.scss";
 
-const ContactListItem = ({ contact: { id, name, number }, deleteContact }) => {
+const ContactListItem = ({ contact: { id, name, number } }) => {
+  const dispatch = useDispatch();
   return (
     <li className="Item">
       <p>
@@ -13,7 +14,7 @@ const ContactListItem = ({ contact: { id, name, number }, deleteContact }) => {
       <button
         className="Item__button"
         type="button"
-        onClick={() => deleteContact(id)}
+        onClick={() => dispatch(contactActions.deleteContact(id))}
       >
         Delete
       </button>
@@ -27,11 +28,6 @@ ContactListItem.propTypes = {
     name: PropTypes.string.isRequired,
     number: PropTypes.string.isRequired,
   }).isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  deleteContact: (id) => dispatch(contactActions.deleteContact(id)),
-});
-
-export default connect(null, mapDispatchToProps)(ContactListItem);
+export default ContactListItem;
